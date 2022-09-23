@@ -47,9 +47,9 @@
         </form>
     </div>
     
-    <div class="container tabla-venta mt-2">
+    <div class="container-fluid col-12 mt-2">
         
-        <table class="table">
+        <table class="table table-bordered">
             <thead>
                 <tr class="table-dark">
                 <!-- <th scope="col">#</th> -->
@@ -67,13 +67,13 @@
                         
                     </th>
                     <th scope="col-1">
-                        <input type="text" id="txt_descripcion">
+                        <input type="text" id="txt_descripcion" class="form-control col-12">
                     </th>
-                    <th scope="col-1" id="th_precio">
+                    <th scope="col-1" id="th_precio" class="text-center">
                         
                     </th>
                     <th scope="col-1">
-                        <input type="text" value="0" id="txt_Cantidad" >
+                        <input type="text" value="0" id="txt_Cantidad" class="form-control col-12" >
                     </th>
                     <th scope="col-1" id="th_existencia">
                         
@@ -88,6 +88,21 @@
             </table>
             <button type="button" class="btn btn-primary col-12" id="btnAgregarFactura" disabled>Agregar a la factura</button>
             
+            <table class="table table-bordered mt-2">
+            <thead>
+                <tr class="table-dark">
+                <!-- <th scope="col">#</th> -->
+                <th scope="col">id_articulo</th>
+                <th scope="col">descripcion</th>
+                <th scope="col">cantidad</th>
+                <th scope="col">Precio Total</th>
+                </tr>
+            </thead>
+                <tbody id="tbody_detalle">
+                    
+                </tbody>
+            </table>
+
         <div class="container offset-9 col-3">
             <table class="table">
             <tbody>
@@ -98,7 +113,7 @@
                             Subtotal
                     </th>
                     <th scope="col-1">
-                        2190481
+                        0
                     </th>
                 </tr>
                 <tr>
@@ -106,7 +121,7 @@
                             IVA(22%)
                     </th>
                     <th scope="col-1">
-                        849214
+                        0
                     </th>
                 </tr>
                 <tr>
@@ -114,7 +129,7 @@
                             Total
                     </th>
                     <th scope="col-1">
-                        127812985
+                        0
                     </th>
                 </tr>
                 </tbody>
