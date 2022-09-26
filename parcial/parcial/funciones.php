@@ -20,7 +20,7 @@
             $consulta= "SELECT*FROM articulos";
 
             // puedo seleccionar de DB
-            $db = mysqli_select_db( $conexion, "sfact" ) or die ( "Upps! Pues va a ser que no se ha podido conectar a la base de datos" );
+            $db = mysqli_select_db( $conexion, "parcial" ) or die ( "Upps! Pues va a ser que no se ha podido conectar a la base de datos" );
 
             // 3) Ejecutar la orden y obtener datos
             $datos= mysqli_query ($conexion,$consulta);
@@ -48,7 +48,7 @@
             $consulta= "SELECT*FROM clientes";
 
             // puedo seleccionar de DB
-            $db = mysqli_select_db( $conexion, "sfact" ) or die ( "Upps! Pues va a ser que no se ha podido conectar a la base de datos" );
+            $db = mysqli_select_db( $conexion, "parcial" ) or die ( "Upps! Pues va a ser que no se ha podido conectar a la base de datos" );
 
             // 3) Ejecutar la orden y obtener datos
             $datos= mysqli_query ($conexion,$consulta);
@@ -75,7 +75,7 @@
 
                 $consulta= "INSERT INTO `articulos`( `descripcion`, `precio`, `cantidad`) VALUES ('$descripcion','$precio','$cantidad')";
                 
-                $db = mysqli_select_db( $conexion, "sfact" ) or die ( "Upps! Pues va a ser que no se ha podido conectar a la base de datos" );
+                $db = mysqli_select_db( $conexion, "parcial" ) or die ( "Upps! Pues va a ser que no se ha podido conectar a la base de datos" );
     
                 
                 try {
@@ -110,7 +110,7 @@
             
                 $consulta= "INSERT INTO `clientes`(`nombre`, `direccion`, `telefono`) VALUES ('$nombre','$direccion','$telefono')";
                 
-                $db = mysqli_select_db( $conexion, "sfact" ) or die ( "Upps! Pues va a ser que no se ha podido conectar a la base de datos" );
+                $db = mysqli_select_db( $conexion, "parcial" ) or die ( "Upps! Pues va a ser que no se ha podido conectar a la base de datos" );
     
                 try {
                     $datos= mysqli_query ($conexion,$consulta);
@@ -162,7 +162,7 @@
           if(!empty($_POST['articulo'])){
             include('bd.php');
             $consulta = "SELECT * FROM `articulos` WHERE descripcion LIKE '%".$_POST['articulo']."%';";
-            $db = mysqli_select_db( $conexion, "sfact" ) or die ( "Upps! Pues va a ser que no se ha podido conectar a la base de datos" );
+            $db = mysqli_select_db( $conexion, "parcial" ) or die ( "Upps! Pues va a ser que no se ha podido conectar a la base de datos" );
             
             $datos= mysqli_query ($conexion,$consulta);
             
@@ -200,7 +200,7 @@
             if(!empty($_POST['idArticulo'])){
               include('bd.php');
             $consulta = "SELECT * FROM `articulos` WHERE id_articulo=".$_POST['idArticulo']."";
-            $db = mysqli_select_db( $conexion, "sfact" ) or die ( "Upps! Pues va a ser que no se ha podido conectar a la base de datos" );
+            $db = mysqli_select_db( $conexion, "parcial" ) or die ( "Upps! Pues va a ser que no se ha podido conectar a la base de datos" );
             
             $datos= mysqli_query ($conexion,$consulta);
             
@@ -232,6 +232,7 @@
             
           }
       
+         
     
       
   

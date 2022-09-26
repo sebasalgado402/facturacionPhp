@@ -1,11 +1,16 @@
 
-var datosCargar;
-var objetoCargar;
-var existenciaMax = 0;
-var precioTotal;
-var idArticulo;
-var subTotal_detalle;
+let datosCargar;
+let objetoCargar ;
+let existenciaMax = 0;
 
+let precioTotal;
+let resultadoPrecioTotal;
+
+let idArticulo;
+let subTotal_detalle;
+
+let contadorBotonFactura = 0;
+let arrayArticulos =[];
 
 ///////////////////////////////////////////////////////
 $(function() {
@@ -110,10 +115,158 @@ $(function() {
     });
         
 ////El JSON que viene desde php , lo decodifica y obtengo los datos del artículo
-    function tomarIdArticulo(idaction,idarticulo) {
+function tomarIdArticulo(idaction,idarticulo) {
               
         
                 
+    $.ajax({
+        url: 'funciones.php',
+        type: "POST",
+        async: true,
+        data: {idAction:idaction,idArticulo:idarticulo},
+        
+        
+        success: function(response){
+            
+            
+            if(response == 0){
+                
+            }
+            objetoCargar = $.parseJSON(response);
+            
+            console.log("este es el json"+response);
+            
+            $('#th_id_articulo').html(objetoCargar.id);
+            $('#th_precio').html(objetoCargar.precio);
+            idArticulo = objetoCargar.id;
+            existenciaMax = objetoCargar.cantidad;
+            precioTotal = objetoCargar.precio;
+            
+            $('#th_existencia').html(objetoCargar.cantidad); 
+
+        },
+        error: function(error){
+
+        }
+    });
+}
+///////////////////////////////////////////////////////
+//////Función que se ejecuta cada vez que suelto una tecla en el elemento con ese ID
+      $('#txt_Cantidad').change(function(){
+        
+        if($('#txt_Cantidad').val() !== ''){
+            existenciaMax = $('#txt_Cantidad').val();
+            
+
+    if ( existenciaMax <= parseInt(objetoCargar.cantidad) && existenciaMax >=1 && $('#txt_Cantidad').val() !==''){
+        calcularPrecioTotal();
+        $( "#btnAgregarFactura" ).prop('disabled', false);  //quito la propiedad "disabled" al elemento con ese ID
+    }else if(existenciaMax > parseInt(objetoCargar.cantidad) || existenciaMax <= 0){
+        calcularPrecioTotal();
+            $( "#btnAgregarFactura" ).prop('disabled', true);   //agrego la propiedad "disabled" al elemento con ese ID
+    }
+    
+    }else{
+        
+        $( "#btnAgregarFactura" ).prop('disabled', true);   //agrego la propiedad "disabled" al elemento con ese ID
+    }
+    }); 
+///////////////////////////////////////////////////////
+////Función que limpia los campos de los articulos
+    function limpiarCamposArt(){
+        $('#th_id_articulo').html('');
+        $('#txt_descripcion').val('');
+        $('#th_precio').html('');
+        $('#txt_Cantidad').val('');
+        $('#th_existencia').html('');
+        $('#th_precioTotal').html('');
+    }
+///////////////////////////////////////////////////////
+////Calcular precioTotal
+    function calcularPrecioTotal(){
+        let num = $('#txt_Cantidad').val();
+        console.log("numero de input cantidad: "+num);
+        console.log("numero del precio total recibido : "+precioTotal);
+        resultadoPrecioTotal = parseInt(precioTotal) * parseInt(num);
+        console.log("resultado va a ser igual = "+resultadoPrecioTotal);
+        $('#th_precioTotal').html("$ "+resultadoPrecioTotal);
+    }
+    ///////////////////////////////////////////////////////
+////Agregar producto al detalle    
+    function agregarProducto(){
+        //let idArticulo = $('#th_id_articulo').val();
+        let descripcion = $('#txt_descripcion').val();
+        let cantidad = $('#txt_Cantidad').val();
+        //let precioTotal = $('#th_precioTotal').val();
+        
+        console.log("Este es el id"+idArticulo);
+        textoInsertado = `
+        <tr>
+        <th scope="col-1" id="${contadorBotonFactura}idArticulo_detalle">
+            ${idArticulo} 
+        </th>
+        <th scope="col-1" id="${contadorBotonFactura}descripcion_detalle">
+            ${descripcion}
+        </th>
+       
+        <th scope="col-1" id="${contadorBotonFactura}cantidad_detalle"> 
+            ${cantidad}
+        </th>
+       
+        <th scope="col-1" id="${contadorBotonFactura}precioTotal_detalle">
+            ${resultadoPrecioTotal}
+            </th>
+        </tr>
+        `;
+        $('#tbody_detalle').append(textoInsertado);
+        
+        limpiarCamposArt();
+        
+        
+    }
+////Al dar click al boton agregar factura.. se ejecuta el bloque de codigo..    
+    $('#btnAgregarFactura').click(function(){
+        contadorBotonFactura+=1;
+        console.log("Articulos en factura : "+contadorBotonFactura);
+        event.preventDefault();
+        agregarProducto();
+        limpiarCamposArt();
+        $( "#btnAgregarFactura" ).prop('disabled', true);
+
+
+    });
+    //////////////////////////////////////////////////////////
+    $('#btnProcesarCompra').click(function(){
+         event.preventDefault();
+        
+         
+         
+         for (var i = 1; i <= contadorBotonFactura; i+=1) {
+            let renglonArticulo = '#'+i+'idArticulo_detalle';
+            console.log(renglonArticulo);
+            let renglonDescripcion = '#'+i+'descripcion_detalle';
+            let renglonCantidad = '#'+i+'cantidad_detalle';
+            let renglonPrecio = '#'+i+'precioTotal_detalle';
+           
+             articulo = new Object();
+             articulo.nroRenglon = i;
+             articulo.id_articulo = $(renglonArticulo).val();
+             articulo.nombre = $(renglonDescripcion).val();
+             articulo.cantidad = $(renglonCantidad).val();
+             articulo.precioTotal = $(renglonPrecio).val();
+             arrayArticulos.push(articulo);
+            
+         }
+        
+        
+        console.log(arrayArticulos); 
+        
+
+        
+       /*  var art = $('#txt_descripcion').val();
+        var articulo = art.trim();
+        var action = 'searchArticulo';
+
         $.ajax({
             url: 'funciones.php',
             type: "POST",
@@ -143,90 +296,7 @@ $(function() {
             error: function(error){
     
             }
-        });
-    }
-///////////////////////////////////////////////////////
-//////Función que se ejecuta cada vez que suelto una tecla en el elemento con ese ID
-      $('#txt_Cantidad').keyup(function(){
-        
-        if($('#txt_Cantidad').val() !== ''){
-            existenciaMax = parseInt($('#txt_Cantidad').val());
-            
-
-    if ( existenciaMax <= parseInt(objetoCargar.cantidad) && existenciaMax >=1 && $('#txt_Cantidad').val() !==''){
-        calcularPrecioTotal();
-        $( "#btnAgregarFactura" ).prop('disabled', false);  //quito la propiedad "disabled" al elemento con ese ID
-    }else if(existenciaMax > parseInt(objetoCargar.cantidad) || existenciaMax <= 0){
-        calcularPrecioTotal();
-            $( "#btnAgregarFactura" ).prop('disabled', true);   //agrego la propiedad "disabled" al elemento con ese ID
-    }
-    
-    }else{
-        
-        $( "#btnAgregarFactura" ).prop('disabled', true);   //agrego la propiedad "disabled" al elemento con ese ID
-    }
-    }); 
-///////////////////////////////////////////////////////
-////Función que limpia los campos de los articulos
-    function limpiarCamposArt(){
-        $('#th_id_articulo').html('');
-        $('#txt_descripcion').val('');
-        $('#th_precio').html('');
-        $('#txt_Cantidad').val('');
-        $('#th_existencia').html('');
-        $('#th_precioTotal').html('');
-    }
-///////////////////////////////////////////////////////
-////Calcular precioTotal
-    function calcularPrecioTotal(){
-        num = parseInt($('#txt_Cantidad').val());
-        console.log(num);
-        console.log(precioTotal);
-        precioTotal = precioTotal * num;
-        $('#th_precioTotal').html("$ "+precioTotal);
-    }
-    ///////////////////////////////////////////////////////
-////Agregar producto al detalle    
-    function agregarProducto(){
-        //let idArticulo = $('#th_id_articulo').val();
-        let descripcion = $('#txt_descripcion').val();
-        let cantidad = $('#txt_Cantidad').val();
-        //let precioTotal = $('#th_precioTotal').val();
-        
-        console.log("Este es el id"+idArticulo);
-        textoInsertado = `
-        <tr>
-        <th scope="col-1" id="idArticulo_detalle">
-            ${idArticulo}
-        </th>
-        <th scope="col-1" id="descripcion_detalle">
-            ${descripcion}
-        </th>
-       
-        <th scope="col-1" id="cantidad_detalle"> 
-            ${cantidad}
-        </th>
-       
-        <th scope="col-1" id="precioTotal_detalle">
-            ${precioTotal}
-            </th>
-        </tr>
-        `;
-        $('#tbody_detalle').append(textoInsertado);
-        
-        limpiarCamposArt();
-        
-        
-    }
-////Al dar click al boton agregar factura.. se ejecuta el bloque de codigo..    
-    $('#btnAgregarFactura').click(function(){
-        event.preventDefault();
-        agregarProducto();
-        limpiarCamposArt();
-        $( "#btnAgregarFactura" ).prop('disabled', true);
-
-
+        });  */
     });
-//////////////////////////////////////////////////////////
-
+    
 });

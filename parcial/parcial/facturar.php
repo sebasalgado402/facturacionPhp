@@ -26,7 +26,7 @@
             <div class="row mb-3">
                 <div class="col-2">
                     <label for="txt_id_cliente" class="form-label">id_cliente</label>
-                    <input type="text" class="form-control prueba" name="txt_id_cliente" id="txt_id_cliente" /> <!-- onkeyup='test()' -->
+                    <input type="text" class="form-control prueba" name="txt_id_cliente" id="txt_id_cliente" required/> 
                 </div>
                 <div class="col-10">
                     <label for="txt_nombre_cliente" class="form-label">Nombre</label>
@@ -135,8 +135,8 @@
                 </tbody>
             </table>
         </div>
-        <button type="submit" class="btn btn-success offset-4 col-4">Procesar compra</button>
-        <button type="submit"class="btn btn-danger offset-4 col-4">Anular compra</button>
+        <button type="submit" class="btn btn-success offset-4 col-4" id="btnProcesarCompra">Procesar compra</button>
+        <button type="submit"class="btn btn-danger offset-4 col-4" id="btnAnularCompra">Anular compra</button>
     </div>
 
     
